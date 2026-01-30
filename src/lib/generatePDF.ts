@@ -25,6 +25,8 @@ export async function generateResultsPDF(players: Player[], gameCode?: string) {
   doc.text(`Dato: ${new Date().toLocaleDateString('da-DK')}`, 105, 48, { align: 'center' })
 
   let yPos = 60
+  const imageSize = 45 // Large portrait size
+  const rowHeight = 55
 
   // Players list
   for (let i = 0; i < sortedPlayers.length; i++) {
@@ -32,55 +34,47 @@ export async function generateResultsPDF(players: Player[], gameCode?: string) {
     const rank = i + 1
     
     // Check if we need a new page
-    if (yPos > 270) {
+    if (yPos > 250) {
       doc.addPage()
       yPos = 20
     }
 
-    // Background for winner
-    if (rank === 1) {
-      doc.setFillColor(255, 215, 0, 0.2)
-      doc.rect(15, yPos - 8, 180, 35, 'F')
-    }
-
     // Rank
-    doc.setFontSize(rank === 1 ? 24 : 16)
-    doc.setTextColor(rank === 1 ? 255 : rank === 2 ? 192 : rank === 3 ? 205 : 100, 
-                     rank === 1 ? 215 : rank === 2 ? 192 : rank === 3 ? 127 : 100, 
-                     rank === 1 ? 0 : rank === 2 ? 192 : rank === 3 ? 50 : 100)
-    doc.text(`#${rank}`, 20, yPos + 5)
+    doc.setFontSize(18)
+    doc.setTextColor(80, 80, 80)
+    doc.text(`#${rank}`, 20, yPos + 20)
 
-    // Portrait (if available)
+    // Portrait (large!)
     if (player.portrait) {
       try {
-        doc.addImage(player.portrait, 'PNG', 40, yPos - 8, 25, 25)
+        doc.addImage(player.portrait, 'PNG', 35, yPos, imageSize, imageSize)
       } catch (e) {
         // If image fails, draw placeholder
         doc.setDrawColor(200, 200, 200)
-        doc.rect(40, yPos - 8, 25, 25)
-        doc.setFontSize(16)
+        doc.rect(35, yPos, imageSize, imageSize)
+        doc.setFontSize(24)
         doc.setTextColor(200, 200, 200)
-        doc.text('?', 52, yPos + 8, { align: 'center' })
+        doc.text('?', 35 + imageSize/2, yPos + imageSize/2 + 8, { align: 'center' })
       }
     } else {
       doc.setDrawColor(200, 200, 200)
-      doc.rect(40, yPos - 8, 25, 25)
-      doc.setFontSize(16)
+      doc.rect(35, yPos, imageSize, imageSize)
+      doc.setFontSize(24)
       doc.setTextColor(200, 200, 200)
-      doc.text('?', 52, yPos + 8, { align: 'center' })
+      doc.text('?', 35 + imageSize/2, yPos + imageSize/2 + 8, { align: 'center' })
     }
 
     // Name
-    doc.setFontSize(rank === 1 ? 18 : 14)
+    doc.setFontSize(16)
     doc.setTextColor(50, 50, 50)
-    doc.text(player.name, 72, yPos + 5)
+    doc.text(player.name, 88, yPos + 18)
 
     // Score
-    doc.setFontSize(rank === 1 ? 18 : 14)
-    doc.setTextColor(0, 200, 0)
-    doc.text(`${player.score.toLocaleString()} point`, 190, yPos + 5, { align: 'right' })
+    doc.setFontSize(14)
+    doc.setTextColor(0, 150, 0)
+    doc.text(`${player.score.toLocaleString()} point`, 88, yPos + 32)
 
-    yPos += rank === 1 ? 40 : 32
+    yPos += rowHeight
   }
 
   // Footer

@@ -172,13 +172,13 @@ export default function PlayerGame() {
           </h2>
 
           {/* Answer buttons */}
-          <div className="flex-1 grid grid-cols-1 gap-2 min-h-0">
+          <div className="flex-1 grid grid-cols-1 gap-1 min-h-0">
             {(['A', 'B', 'C', 'D'] as const).map((letter, idx) => {
               const isSelected = selectedAnswer === letter
               const isThisCorrect = currentQuestion.correct === letter
               const showResult = gameState.phase === 'reveal'
 
-              let btnClass = 'answer-btn'
+              let btnClass = 'answer-btn !py-2 !px-2 !text-sm'
               if (isSelected) btnClass += ' selected'
               if (showResult && isThisCorrect) btnClass += ' correct'
               if (showResult && isSelected && !isThisCorrect) btnClass += ' incorrect'
@@ -190,10 +190,10 @@ export default function PlayerGame() {
                   disabled={hasAnswered || gameState.phase === 'reveal'}
                   className={btnClass}
                 >
-                  <span className="font-retro text-2xl text-neon-cyan mr-3">
+                  <span className="font-retro text-lg text-neon-cyan mr-2">
                     {letter}
                   </span>
-                  <span className="font-arcade">
+                  <span className="font-arcade text-sm">
                     {currentQuestion.options[idx]}
                   </span>
                 </button>

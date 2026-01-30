@@ -230,7 +230,7 @@ export default function HostGame() {
             </div>
           )}
 
-          <h2 className="font-arcade text-4xl md:text-6xl text-center text-white mb-14 max-w-5xl">
+          <h2 className="font-arcade text-5xl md:text-7xl text-center text-white mb-14 max-w-5xl">
             {currentQuestion.question}
           </h2>
 

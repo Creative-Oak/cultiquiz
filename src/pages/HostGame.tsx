@@ -77,7 +77,6 @@ export default function HostGame() {
     if (!gameState) return
 
     const questionIndex = gameState.current_question
-    setShowingAnswer(false)
 
     // Check if last question of round
     if (isLastQuestionOfRound(questionIndex)) {

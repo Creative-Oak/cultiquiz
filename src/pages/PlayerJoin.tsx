@@ -33,7 +33,6 @@ export default function PlayerJoin() {
   }
 
   const handlePortraitSave = async (dataUrl: string) => {
-    setPortrait(dataUrl)
     setStep('joining')
     setError(null)
 

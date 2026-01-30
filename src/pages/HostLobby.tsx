@@ -60,7 +60,7 @@ export default function HostLobby() {
     : ''
 
   return (
-    <div className="min-h-screen p-8 flex flex-col items-center">
+    <div className="min-h-screen p-8 flex flex-col items-center justify-center">
       {/* Header */}
       <h1 className="font-retro text-4xl md:text-6xl text-center mb-4 neon-text-pink">
         CULTIQUIZ!!
@@ -85,7 +85,7 @@ export default function HostLobby() {
         </div>
       ) : (
         /* Lobby View */
-        <div className="w-full max-w-4xl flex flex-col lg:flex-row gap-8 items-start">
+        <div className="w-full max-w-5xl flex flex-col lg:flex-row gap-8 items-center justify-center">
           {/* QR Code Section */}
           <div className="flex-1 flex flex-col items-center">
             <div className="qr-container mb-4">

@@ -195,23 +195,23 @@ export default function HostGame() {
 
   // Question or reveal phase
   return (
-    <div className="min-h-screen flex flex-col p-8">
+    <div className="min-h-screen flex flex-col p-10">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <div className="font-retro text-xl neon-text-cyan">
+      <div className="flex justify-between items-center mb-8">
+        <div className="font-retro text-3xl neon-text-cyan">
           Runde {currentRound}
         </div>
-        <div className="font-arcade text-lg text-white">
+        <div className="font-arcade text-2xl text-white">
           Spørgsmål {(gameState.current_question % QUESTIONS_PER_ROUND) + 1} / {QUESTIONS_PER_ROUND}
         </div>
-        <div className="font-arcade text-lg text-neon-green">
+        <div className="font-arcade text-2xl text-neon-green">
           {answersForQuestion.length} / {players.length} svar
         </div>
       </div>
 
       {/* Timer */}
       {gameState.phase === 'question' && (
-        <div className="mb-8">
+        <div className="mb-10">
           <Timer timeLeft={timer.timeLeft} percentage={timer.percentage} />
         </div>
       )}
@@ -221,21 +221,21 @@ export default function HostGame() {
         <div className="flex-1 flex flex-col items-center justify-center">
           {/* Question Image */}
           {currentQuestion.image && (
-            <div className="mb-6 max-w-md">
+            <div className="mb-8 max-w-xl">
               <img 
                 src={currentQuestion.image} 
                 alt="Spørgsmålsbillede"
-                className="w-full h-auto max-h-64 object-contain rounded-lg border-4 border-neon-cyan shadow-lg shadow-cyan-500/30"
+                className="w-full h-auto max-h-80 object-contain rounded-lg border-4 border-neon-cyan shadow-lg shadow-cyan-500/30"
               />
             </div>
           )}
 
-          <h2 className="font-arcade text-3xl md:text-5xl text-center text-white mb-12 max-w-4xl">
+          <h2 className="font-arcade text-4xl md:text-6xl text-center text-white mb-14 max-w-5xl">
             {currentQuestion.question}
           </h2>
 
           {/* Options */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
             {(['A', 'B', 'C', 'D'] as const).map((letter, idx) => {
               const isCorrect = currentQuestion.correct === letter
               const showCorrect = gameState.phase === 'reveal' && isCorrect
@@ -245,18 +245,18 @@ export default function HostGame() {
                 <div
                   key={letter}
                   className={`
-                    answer-btn flex items-center gap-4
+                    answer-btn flex items-center gap-6 !text-2xl !py-5 !px-6
                     ${showCorrect ? 'correct' : ''}
                     ${showWrong ? 'opacity-50' : ''}
                   `}
                 >
                   <span className={`
-                    font-retro text-3xl w-10
+                    font-retro text-4xl w-12
                     ${showCorrect ? 'neon-text-green' : 'neon-text-cyan'}
                   `}>
                     {letter}
                   </span>
-                  <span className="font-arcade text-xl">
+                  <span className="font-arcade text-2xl">
                     {currentQuestion.options[idx]}
                   </span>
                 </div>
@@ -266,13 +266,13 @@ export default function HostGame() {
 
           {/* Reveal info */}
           {gameState.phase === 'reveal' && (
-            <div className="mt-8 text-center">
-              <p className="font-arcade text-2xl text-neon-green mb-4">
+            <div className="mt-10 text-center">
+              <p className="font-arcade text-3xl text-neon-green mb-6">
                 {correctAnswers} spillere svarede rigtigt!
               </p>
               <button
                 onClick={handleNext}
-                className="retro-btn-primary text-lg px-8 py-4"
+                className="retro-btn-primary text-xl px-10 py-5"
               >
                 {isLastQuestionOfRound(gameState.current_question) || isLastQuestion(gameState.current_question)
                   ? 'Se Scoreboard'

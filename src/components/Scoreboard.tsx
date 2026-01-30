@@ -1,4 +1,5 @@
 import { Player } from '../lib/supabase'
+import { generateResultsPDF } from '../lib/generatePDF'
 
 interface ScoreboardProps {
   players: Player[]
@@ -7,10 +8,13 @@ interface ScoreboardProps {
 }
 
 export default function Scoreboard({ players, round, isFinal = false }: ScoreboardProps) {
-  // Get top 5 players
-  const topPlayers = [...players]
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 5)
+  // Get top 5 players for display
+  const sortedPlayers = [...players].sort((a, b) => b.score - a.score)
+  const topPlayers = sortedPlayers.slice(0, 5)
+
+  const handleDownloadPDF = () => {
+    generateResultsPDF(players)
+  }
 
   const getMedalColor = (index: number) => {
     switch (index) {
@@ -50,6 +54,14 @@ export default function Scoreboard({ players, round, isFinal = false }: Scoreboa
             </div>
             <p className="font-arcade text-4xl neon-text-yellow">{winner.name}</p>
             <p className="font-retro text-3xl text-neon-green mt-2">{winner.score.toLocaleString()} point</p>
+            
+            {/* Download PDF button */}
+            <button
+              onClick={handleDownloadPDF}
+              className="mt-6 retro-btn text-sm px-6 py-3"
+            >
+              📄 Download PDF
+            </button>
           </div>
 
           {/* Runner ups - Right side */}

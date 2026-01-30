@@ -11,7 +11,6 @@ export default function PlayerJoin() {
   
   const [step, setStep] = useState<Step>('name')
   const [name, setName] = useState('')
-  const [portrait, setPortrait] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   const handleNameSubmit = async (e: React.FormEvent) => {

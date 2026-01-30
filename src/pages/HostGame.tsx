@@ -19,7 +19,6 @@ export default function HostGame() {
   const { gameId } = useParams<{ gameId: string }>()
   const { gameState, players, updateGameState } = useGameState(gameId)
   const [answers, setAnswers] = useState<Answer[]>([])
-  const [showingAnswer, setShowingAnswer] = useState(false)
 
   const currentQuestion = gameState ? getQuestionForIndex(gameState.current_question) : null
   const currentRound = gameState ? getRoundForQuestion(gameState.current_question) : 1
@@ -29,7 +28,6 @@ export default function HostGame() {
     
     // Move to reveal phase
     await updateGameState({ phase: 'reveal' })
-    setShowingAnswer(true)
   }, [gameState, updateGameState])
 
   const timer = useTimer({

@@ -21,10 +21,6 @@ export default function Scoreboard({ players, round, isFinal = false }: Scoreboa
     }
   }
 
-  const getDelayClass = (index: number) => {
-    return `animation-delay-${index * 200}`
-  }
-
   return (
     <div className="w-full max-w-2xl mx-auto p-8">
       <h2 className="font-retro text-3xl text-center mb-2 neon-text-pink">

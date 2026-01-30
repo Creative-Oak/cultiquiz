@@ -13,8 +13,7 @@ export const questions: Question[] = [
   {
     question: "Hvem er mest streamet på Spotify i 2026?",
     options: ["Ed Sheeran", "Taylor Swift", "Bad Bunny", "The Weeknd"],
-    correct: "B",
-    image: "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSmbUw1ZVZVdRIJGNMJhp7jNaFj9m6sez6GHg4krej3RdJB6ws6WLxa1pMcfe8R"
+    correct: "B"
   },
   {
     question: "Hvem er denne baryl?",

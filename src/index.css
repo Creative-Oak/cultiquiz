@@ -104,9 +104,9 @@ body {
 
 /* Answer buttons */
 .answer-btn {
-  @apply font-arcade text-2xl p-4 w-full text-left;
+  @apply font-arcade text-lg py-3 px-3 w-full text-left;
   background: linear-gradient(180deg, #2a2a4a 0%, #1a1a2a 100%);
-  border: 3px solid #4a4a6a;
+  border: 2px solid #4a4a6a;
   color: white;
   cursor: pointer;
   transition: all 0.15s;

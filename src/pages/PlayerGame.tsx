@@ -142,44 +142,37 @@ export default function PlayerGame() {
 
   // Question phase (or reveal)
   return (
-    <div className="min-h-screen flex flex-col p-4">
+    <div className="h-screen flex flex-col p-2 overflow-hidden">
       {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <div className="font-arcade text-sm text-gray-400">
+      <div className="flex justify-between items-center mb-1">
+        <div className="font-arcade text-xs text-gray-400">
           Runde {currentRound}
         </div>
-        <div className="font-arcade text-sm text-neon-green">
-          Score: {currentPlayer.score}
-        </div>
-      </div>
-
-      {/* Question number */}
-      <div className="text-center mb-4">
-        <span className="font-arcade text-sm text-neon-cyan">
+        <div className="font-arcade text-xs text-neon-cyan">
           Spørgsmål {(gameState.current_question % QUESTIONS_PER_ROUND) + 1}
-        </span>
+        </div>
       </div>
 
       {/* Question */}
       {currentQuestion && (
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-h-0">
           {/* Question Image */}
           {currentQuestion.image && (
-            <div className="mb-4 flex justify-center">
+            <div className="mb-2 flex justify-center shrink-0">
               <img 
                 src={currentQuestion.image} 
                 alt="Spørgsmålsbillede"
-                className="w-full max-w-xs h-auto max-h-40 object-contain rounded-lg border-2 border-neon-cyan"
+                className="w-full max-w-[200px] h-auto max-h-28 object-contain rounded-lg border-2 border-neon-cyan"
               />
             </div>
           )}
 
-          <h2 className="font-arcade text-xl text-center text-white mb-6">
+          <h2 className="font-arcade text-base text-center text-white mb-2 shrink-0">
             {currentQuestion.question}
           </h2>
 
           {/* Answer buttons */}
-          <div className="flex-1 grid grid-cols-1 gap-3">
+          <div className="flex-1 grid grid-cols-1 gap-2 min-h-0">
             {(['A', 'B', 'C', 'D'] as const).map((letter, idx) => {
               const isSelected = selectedAnswer === letter
               const isThisCorrect = currentQuestion.correct === letter
@@ -210,22 +203,22 @@ export default function PlayerGame() {
 
           {/* Feedback */}
           {hasAnswered && gameState.phase === 'question' && (
-            <div className="mt-4 text-center p-4 bg-arcade-purple/50 rounded-lg">
-              <p className="font-arcade text-lg text-neon-cyan pulse">
-                Svar modtaget! Venter på afsløring...
+            <div className="mt-2 text-center p-2 bg-arcade-purple/50 rounded-lg shrink-0">
+              <p className="font-arcade text-sm text-neon-cyan pulse">
+                Svar modtaget!
               </p>
             </div>
           )}
 
           {gameState.phase === 'reveal' && (
-            <div className={`mt-4 text-center p-4 rounded-lg ${
+            <div className={`mt-2 text-center p-2 rounded-lg shrink-0 ${
               isCorrect ? 'bg-green-900/50 neon-border' : 'bg-red-900/50 border-2 border-red-500'
             }`}>
-              <p className={`font-retro text-3xl ${isCorrect ? 'neon-text-green' : 'text-red-500'}`}>
+              <p className={`font-retro text-2xl ${isCorrect ? 'neon-text-green' : 'text-red-500'}`}>
                 {isCorrect ? 'RIGTIGT!' : 'FORKERT!'}
               </p>
               {isCorrect && (
-                <p className="font-arcade text-xl text-neon-yellow mt-2">
+                <p className="font-arcade text-base text-neon-yellow">
                   +{pointsEarned} point
                 </p>
               )}

@@ -7,8 +7,8 @@ interface PortraitCanvasProps {
 }
 
 export default function PortraitCanvas({ 
-  width = 200, 
-  height = 200, 
+  width = 280, 
+  height = 280, 
   onSave 
 }: PortraitCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)

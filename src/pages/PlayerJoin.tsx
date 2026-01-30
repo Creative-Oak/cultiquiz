@@ -127,8 +127,6 @@ export default function PlayerJoin() {
           </p>
           
           <PortraitCanvas 
-            width={200} 
-            height={200} 
             onSave={handlePortraitSave}
           />
 

@@ -62,10 +62,10 @@ export default function HostLobby() {
   return (
     <div className="min-h-screen p-8 flex flex-col items-center justify-center">
       {/* Header */}
-      <h1 className="font-retro text-4xl md:text-6xl text-center mb-4 neon-text-pink">
+      <h1 className="font-retro text-4xl md:text-8xl text-center mb-4 neon-text-pink">
         CULTIQUIZ!!
       </h1>
-      <p className="font-arcade text-xl text-neon-cyan mb-8">
+      <p className="font-arcade text-4xl text-neon-cyan mb-8">
         Velkommen til quiz!
       </p>
 

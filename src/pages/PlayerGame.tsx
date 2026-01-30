@@ -142,7 +142,7 @@ export default function PlayerGame() {
 
   // Question phase (or reveal)
   return (
-    <div className="h-screen flex flex-col p-2 overflow-hidden">
+    <div className="h-[70vh] mt-4 flex flex-col p-2 overflow-hidden">
       {/* Header */}
       <div className="flex justify-between items-center mb-1">
         <div className="font-arcade text-xs text-gray-400">
@@ -167,7 +167,7 @@ export default function PlayerGame() {
             </div>
           )}
 
-          <h2 className="font-arcade text-base text-center text-white mb-2 shrink-0">
+          <h2 className="font-arcade text-xl text-center text-white mb-2 shrink-0">
             {currentQuestion.question}
           </h2>
 
@@ -188,12 +188,12 @@ export default function PlayerGame() {
                   key={letter}
                   onClick={() => handleAnswer(letter)}
                   disabled={hasAnswered || gameState.phase === 'reveal'}
-                  className={btnClass}
+                  className={`${btnClass} flex items-center`}
                 >
-                  <span className="font-retro text-lg text-neon-cyan mr-2">
+                  <span className="font-retro text-lg text-neon-cyan mr-4">
                     {letter}
                   </span>
-                  <span className="font-arcade text-sm">
+                  <span className="font-arcade text-2xl">
                     {currentQuestion.options[idx]}
                   </span>
                 </button>

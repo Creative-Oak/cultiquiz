@@ -57,10 +57,9 @@ export const questions: Question[] = [
   },
   {
     question: "Hvad kan ses fra rummet med det blotte øje?",
-    options: ["Den Kinesiske Mur", "Pyramiderne i Giza", "Vejle Fjord Broen", "Storebæltsbroen"],
-    correct: "B",
-    image: "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRz2dkmCcGwd41WHnWcnujTy5am7Tw2P0O3lMaLPJQS2EyIWZ-0KNUFYPMAJ5Fu"
-  },
+    options: ["Den Kinesiske Mur", "Pyramiderne i Giza", "Vejle Fjord Broen", "Grænsen mellem Nordkorea og Sydkorea"],
+    correct: "D"
+ },
   {
     question: "Hvor lang tid tog verdens korteste krig?",
     options: ["38 minutter", "2 timer", "12 dage", "4 måneder"],
@@ -71,8 +70,8 @@ export const questions: Question[] = [
   // RUNDE 3: Logik
   // ============================================
   {
-    question: "Hvor mange måneder har 28 dage i sig?",
-    options: ["Kun 1 (februar)", "6", "12", "Det skifter"],
+    question: "Hvilket politisk arrangement i Danmark afholdes i januar 2026?",
+    options: ["Valg til EU-Parlament", "Folketingsvalg", "Skolevalg", "Landssamling"],
     correct: "C"
   },
   {
@@ -91,9 +90,9 @@ export const questions: Question[] = [
     correct: "C"
   },
   {
-    question: "Hvad sker der hvis man søger på \"askew\" på Google?",
-    options: ["Det sner", "Skærmen drejer", "Den bliver skæv", "Viser katte"],
-    correct: "C"
+    question: "Du deltager i et løb og overhaler den person, der ligger på andenpladsen. Hvilken plads ligger du på nu?",
+    options: ["Førstepladsen", "Andenpladsen", "Tredjepladsen", "Andenpladsen"],
+    correct: "B"
   }
 ]
 

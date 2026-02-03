@@ -40,8 +40,6 @@ export default function HostGame() {
   }, [gameId, quiz])
 
   const questions: Question[] = quiz?.questions || []
-  const totalQuestions = questions.length
-  const totalRounds = Math.ceil(totalQuestions / QUESTIONS_PER_ROUND)
 
   const getQuestionForIndex = (index: number): Question | null => {
     if (index < 0 || index >= questions.length) return null

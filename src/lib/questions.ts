@@ -1,3 +1,9 @@
+/**
+ * @deprecated Questions are now stored in the database.
+ * Import { Question } from './supabase' instead.
+ * This file is kept for reference only.
+ */
+
 export interface Question {
   question: string
   options: [string, string, string, string]
@@ -5,7 +11,7 @@ export interface Question {
   image?: string  // Optional image URL
 }
 
-// CULTIQUIZ!! Questions
+// CULTIQUIZ!! Questions - Now seeded in the database as the default quiz
 export const questions: Question[] = [
   // ============================================
   // RUNDE 1: Pop & Trends

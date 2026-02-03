@@ -1,29 +1,45 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
-import { createGame, supabase, Game, Player } from '../lib/supabase'
+import { supabase, Game, Player, Quiz } from '../lib/supabase'
 
 export default function HostLobby() {
   const navigate = useNavigate()
+  const { gameId } = useParams<{ gameId: string }>()
+  const location = useLocation()
+  const quiz = location.state?.quiz as Quiz | undefined
+  
   const [game, setGame] = useState<Game | null>(null)
   const [players, setPlayers] = useState<Player[]>([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Create new game on mount
-  const handleCreateGame = async () => {
-    setLoading(true)
-    setError(null)
-    
-    const newGame = await createGame()
-    if (newGame) {
-      setGame(newGame)
-    } else {
-      setError('Kunne ikke oprette spil. Prøv igen.')
+  // Load game on mount
+  useEffect(() => {
+    const loadGame = async () => {
+      if (!gameId) {
+        navigate('/')
+        return
+      }
+
+      const { data, error: fetchError } = await supabase
+        .from('games')
+        .select()
+        .eq('id', gameId)
+        .single()
+
+      if (fetchError || !data) {
+        setError('Kunne ikke finde spillet')
+        setLoading(false)
+        return
+      }
+
+      setGame(data)
+      setLoading(false)
     }
-    
-    setLoading(false)
-  }
+
+    loadGame()
+  }, [gameId, navigate])
 
   // Subscribe to players joining
   useEffect(() => {
@@ -52,40 +68,42 @@ export default function HostLobby() {
 
   const handleStartGame = () => {
     if (!game) return
-    navigate(`/host/${game.id}`)
+    navigate(`/host/${game.id}`, { state: { quiz } })
   }
 
   const joinUrl = game 
     ? `${window.location.origin}/play/${game.code}`
     : ''
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="font-arcade text-2xl text-neon-cyan pulse">Indlæser...</p>
+      </div>
+    )
+  }
+
+  if (error || !game) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-6">
+        <p className="font-arcade text-xl text-red-500">{error || 'Spil ikke fundet'}</p>
+        <a href="/" className="retro-btn px-8 py-4">← Tilbage</a>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen p-8 flex flex-col items-center justify-center">
       {/* Header */}
       <h1 className="font-retro text-4xl md:text-8xl text-center mb-4 neon-text-pink">
-        CULTIQUIZ!!
+        {quiz?.name || 'CULTIQUIZ!!'}
       </h1>
       <p className="font-arcade text-4xl text-neon-cyan mb-8">
         Velkommen til quiz!
       </p>
 
-      {!game ? (
-        /* Create Game Button */
-        <div className="flex flex-col items-center gap-6">
-          <button
-            onClick={handleCreateGame}
-            disabled={loading}
-            className="retro-btn-primary text-lg px-12 py-4"
-          >
-            {loading ? 'Opretter...' : 'Start Nyt Spil'}
-          </button>
-          {error && (
-            <p className="font-arcade text-red-500">{error}</p>
-          )}
-        </div>
-      ) : (
-        /* Lobby View */
-        <div className="w-full max-w-5xl flex flex-col lg:flex-row gap-8 items-center justify-center">
+      {/* Lobby View */}
+      <div className="w-full max-w-5xl flex flex-col lg:flex-row gap-8 items-center justify-center">
           {/* QR Code Section */}
           <div className="flex-1 flex flex-col items-center">
             <div className="qr-container mb-4">
@@ -163,7 +181,6 @@ export default function HostLobby() {
             )}
           </div>
         </div>
-      )}
     </div>
   )
 }

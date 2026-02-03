@@ -1,14 +1,10 @@
 import { useParams } from 'react-router-dom'
 import { useState, useEffect, useCallback } from 'react'
 import { useGameState } from '../hooks/useGameState'
-import { supabase } from '../lib/supabase'
-import { 
-  getQuestionForIndex, 
-  getRoundForQuestion,
-  QUESTIONS_PER_ROUND 
-} from '../lib/questions'
+import { supabase, Quiz, Question, getQuizById } from '../lib/supabase'
 
 const QUESTION_TIME = 20
+const QUESTIONS_PER_ROUND = 5
 
 export default function PlayerGame() {
   const { gameId, playerId } = useParams<{ gameId: string; playerId: string }>()
@@ -18,10 +14,54 @@ export default function PlayerGame() {
   const [hasAnswered, setHasAnswered] = useState(false)
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
   const [pointsEarned, setPointsEarned] = useState(0)
+  const [quiz, setQuiz] = useState<Quiz | null>(null)
+
+  // Load quiz based on game
+  useEffect(() => {
+    const loadQuiz = async () => {
+      if (!gameId || quiz) return
+      
+      const { data: game } = await supabase
+        .from('games')
+        .select('quiz_id')
+        .eq('id', gameId)
+        .single()
+      
+      if (game?.quiz_id) {
+        const loadedQuiz = await getQuizById(game.quiz_id)
+        setQuiz(loadedQuiz)
+      }
+    }
+
+    loadQuiz()
+  }, [gameId, quiz])
+
+  const questions: Question[] = quiz?.questions || []
+
+  const getQuestionForIndex = (index: number): Question | null => {
+    if (index < 0 || index >= questions.length) return null
+    return questions[index]
+  }
+
+  const getRoundForQuestion = (questionIndex: number): number => {
+    return Math.floor(questionIndex / QUESTIONS_PER_ROUND) + 1
+  }
+
+  const isLastQuestion = (questionIndex: number): boolean => {
+    return questionIndex === questions.length - 1
+  }
+
+  const getQuestionsInRound = (questionIndex: number): number => {
+    const roundStart = Math.floor(questionIndex / QUESTIONS_PER_ROUND) * QUESTIONS_PER_ROUND
+    const roundEnd = Math.min(roundStart + QUESTIONS_PER_ROUND - 1, questions.length - 1)
+    return roundEnd - roundStart + 1
+  }
 
   const currentQuestion = gameState ? getQuestionForIndex(gameState.current_question) : null
   const currentRound = gameState ? getRoundForQuestion(gameState.current_question) : 1
   const currentPlayer = players.find((p) => p.id === playerId)
+  const isFinal = gameState ? isLastQuestion(gameState.current_question) : false
+  const questionsInCurrentRound = gameState ? getQuestionsInRound(gameState.current_question) : QUESTIONS_PER_ROUND
 
   // Reset state when question changes
   useEffect(() => {
@@ -75,7 +115,7 @@ export default function PlayerGame() {
   }, [hasAnswered, gameState, gameId, playerId, currentQuestion, currentPlayer])
 
   // Loading state
-  if (!gameState || !currentPlayer) {
+  if (!gameState || !currentPlayer || !quiz) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
         <p className="font-arcade text-xl text-neon-cyan pulse">Indlæser...</p>
@@ -115,7 +155,7 @@ export default function PlayerGame() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-6">
         <h2 className="font-retro text-2xl text-center neon-text-pink mb-4">
-          RUNDE {currentRound} SLUT
+          {isFinal ? 'QUIZ SLUT!' : `RUNDE ${currentRound} SLUT`}
         </h2>
         
         <div className="text-center mb-6">
@@ -133,9 +173,15 @@ export default function PlayerGame() {
           </p>
         </div>
 
-        <p className="font-arcade text-lg text-neon-cyan mt-8 pulse">
-          Venter på næste runde...
-        </p>
+        {isFinal ? (
+          <p className="font-arcade text-lg text-neon-yellow mt-8">
+            🏆 Tillykke! 🏆
+          </p>
+        ) : (
+          <p className="font-arcade text-lg text-neon-cyan mt-8 pulse">
+            Venter på næste runde...
+          </p>
+        )}
       </div>
     )
   }
@@ -149,7 +195,7 @@ export default function PlayerGame() {
           Runde {currentRound}
         </div>
         <div className="font-arcade text-xs text-neon-cyan">
-          Spørgsmål {(gameState.current_question % QUESTIONS_PER_ROUND) + 1}
+          Spørgsmål {(gameState.current_question % QUESTIONS_PER_ROUND) + 1} / {questionsInCurrentRound}
         </div>
       </div>
 

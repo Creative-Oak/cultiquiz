@@ -10,10 +10,27 @@ if (!supabaseUrl || !supabaseAnonKey) {
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 // Types
+export interface Question {
+  question: string
+  options: [string, string, string, string]
+  correct: 'A' | 'B' | 'C' | 'D'
+  image?: string
+}
+
+export interface Quiz {
+  id: string
+  name: string
+  description: string | null
+  questions: Question[]
+  created_at: string
+  is_default: boolean
+}
+
 export interface Game {
   id: string
   code: string
   created_at: string
+  quiz_id: string | null
 }
 
 export interface Player {
@@ -45,12 +62,12 @@ export interface Answer {
 }
 
 // Helper functions
-export async function createGame(): Promise<Game | null> {
+export async function createGame(quizId: string): Promise<Game | null> {
   const code = generateGameCode()
   
   const { data: game, error: gameError } = await supabase
     .from('games')
-    .insert({ code })
+    .insert({ code, quiz_id: quizId })
     .select()
     .single()
 
@@ -75,6 +92,75 @@ export async function createGame(): Promise<Game | null> {
   }
 
   return game
+}
+
+export async function getQuizzes(): Promise<Quiz[]> {
+  const { data, error } = await supabase
+    .from('quizzes')
+    .select()
+    .order('is_default', { ascending: false })
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('Error fetching quizzes:', error)
+    return []
+  }
+
+  return data || []
+}
+
+export async function getQuizById(id: string): Promise<Quiz | null> {
+  const { data, error } = await supabase
+    .from('quizzes')
+    .select()
+    .eq('id', id)
+    .single()
+
+  if (error) {
+    console.error('Error fetching quiz:', error)
+    return null
+  }
+
+  return data
+}
+
+export async function createQuiz(name: string, description: string | null, questions: Question[]): Promise<Quiz | null> {
+  const { data, error } = await supabase
+    .from('quizzes')
+    .insert({ name, description, questions })
+    .select()
+    .single()
+
+  if (error) {
+    console.error('Error creating quiz:', error)
+    return null
+  }
+
+  return data
+}
+
+export async function formatQuestionsWithAI(rawText: string): Promise<Question[] | null> {
+  try {
+    const response = await fetch(`${supabaseUrl}/functions/v1/format-questions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ rawText }),
+    })
+
+    if (!response.ok) {
+      const error = await response.json()
+      console.error('Error formatting questions:', error)
+      return null
+    }
+
+    const data = await response.json()
+    return data.questions
+  } catch (error) {
+    console.error('Error calling format-questions:', error)
+    return null
+  }
 }
 
 export async function joinGame(code: string, name: string, portrait: string): Promise<Player | null> {
